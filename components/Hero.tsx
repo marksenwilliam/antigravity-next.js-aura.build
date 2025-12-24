@@ -1,0 +1,108 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Script from "next/script";
+
+export default function Hero() {
+    // We can initialize the unicorn studio script here or in layout. keeping it simple.
+    return (
+        <section className="md:pt-48 md:pb-36 flex flex-col overflow-hidden text-center pt-32 pr-6 pb-24 pl-6 relative items-center">
+            {/* Background Layers */}
+            <div className="aura-background-component fixed top-0 w-full h-[50vh] md:h-screen -z-10 opacity-100"
+                style={{ maskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)" }}
+            >
+                <div className="aura-background-component top-0 w-full -z-10 absolute h-full">
+                    <div data-us-project="BqS5vTHVEpn6NiF0g8iJ" className="absolute w-full h-full left-0 top-0 -z-10"></div>
+                    {/* This script needs to run on client */}
+                    <Script
+                        src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js"
+                        strategy="lazyOnload"
+                        onLoad={() => {
+                            // @ts-expect-error external script
+                            if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
+                                // @ts-expect-error external script
+                                UnicornStudio.init();
+                                // @ts-expect-error external script
+                                window.UnicornStudio.isInitialized = true;
+                            }
+                        }}
+                    />
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-[#8C57EF] via-[#E65CB8] to-[#8C57EF] mix-blend-multiply z-0 pointer-events-none"></div>
+                </div>
+            </div>
+
+            <div className="relative z-10 flex flex-col items-center">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium text-white tracking-tighter mb-8 max-w-5xl mx-auto leading-[0.95] drop-shadow-2xl font-montserrat">
+                    Bygg ett varumärke
+                    <br />
+                    <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-neutral-700">
+                        som dominerar din marknad
+                    </span>
+                </h1>
+
+                <p className="text-neutral-400 text-sm md:text-base max-w-xl mx-auto mb-12 leading-relaxed font-light tracking-wide">
+                    Webbdesign, SEO & digital annonsering, vi har allt du behöver för att
+                    växa
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center justify-center">
+                    <Link
+                        href="#strategic-analysis"
+                        className="group isolate inline-flex cursor-pointer overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_8px_rgba(10,143,106,0.35)] rounded-full relative shadow-[0_8px_40px_rgba(10,143,106,0.25)] w-full sm:w-auto justify-center"
+                        style={{
+                            // @ts-expect-error custom properties
+                            "--spread": "90deg", "--shimmer-color": "rgba(255,255,255,0.6)", "--radius": "9999px", "--speed": "4s", "--cut": "1px", "--bg": "rgba(255, 255, 255, 0.05)"
+                        }}
+                    >
+                        <div className="absolute inset-0">
+                            <div className="absolute inset-[-200%] w-[400%] h-[400%] [animation:rotate-gradient_var(--speed)_linear_infinite]">
+                                <div className="absolute inset-0 [background:conic-gradient(from_calc(270deg-(var(--spread)*0.5)),transparent_0,var(--shimmer-color)_var(--spread),transparent_var(--spread))]"></div>
+                            </div>
+                        </div>
+                        <div className="absolute rounded-full [background:var(--bg)] [inset:var(--cut)] backdrop-blur"></div>
+                        <div
+                            className="z-10 flex gap-2 sm:w-auto overflow-hidden text-xs uppercase font-semibold tracking-wider text-white w-full py-3.5 px-8 relative items-center justify-center"
+                            style={{ borderRadius: "9999px" }}
+                        >
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    content: " ",
+                                    display: "block",
+                                    width: "200%",
+                                    height: "200%",
+                                    background:
+                                        "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), transparent)",
+                                    animation: "borderBeamRotation 4s infinite linear",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    pointerEvents: "none",
+                                }}
+                            ></div>
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    inset: "1px",
+                                    background: "rgba(10, 143, 106, 0.9)",
+                                    borderRadius: "9999px",
+                                    backdropFilter: "blur(8px)",
+                                }}
+                            ></div>
+                            <span className="whitespace-nowrap z-10 relative">ta quiz</span>
+                        </div>
+                    </Link>
+                    <Link
+                        href="#services"
+                        className="flex items-center justify-center gap-2 glass-panel hover:text-white uppercase transition-colors sm:w-auto group text-xs font-medium text-neutral-300 tracking-wider w-full rounded-lg pt-3.5 pr-8 pb-3.5 pl-8"
+                    >
+                        se tjänster
+                    </Link>
+                </div>
+            </div>
+
+            <div className="mt-32 h-px w-full max-w-[200px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        </section>
+    );
+}

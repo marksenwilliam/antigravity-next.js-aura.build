@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --emerald: #0A8F6A;
+  }
+
+  body {
+    @apply antialiased bg-black text-white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 4px 24px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .glass-panel:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 8px 32px -4px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Ambient Background */
+  .ambient-light {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 15% 50%, rgba(140, 87, 239, 0.08), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(230, 92, 184, 0.05), transparent 25%);
+  }
+}
+
+/* Scroll Reveal Animation - though we will try to use Framer Motion, 
+   keeping these classes for fallback or simplified usage if needed */
+.reveal {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(30px) scale(0.98);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+}
+
+.reveal.active {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0) scale(1);
+}
+
+/* Tab Animation */
+.tab-content {
+  display: none;
+  animation: softFade 0.5s ease forwards;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes softFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.accordion-content {
+  transition: grid-template-rows 0.4s ease-out;
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+.accordion-content>div {
+  overflow: hidden;
+}
+
+.accordion-content.open {
+  grid-template-rows: 1fr;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+@keyframes borderBeamRotation {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes rotate-gradient {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Range Slider Styling */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #0A8F6A;
+  cursor: pointer;
+  margin-top: -6px;
+  box-shadow: 0 0 10px rgba(10, 143, 106, 0.5);
+  border: 2px solid #000;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* Quiz Steps */
+.step-container {
+  display: none;
+}
+
+.step-container.active {
+  display: block;
+  animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.quiz-option.selected {
+  border-color: #0A8F6A;
+  background-color: rgba(10, 143, 106, 0.1);
+}
+
+.quiz-option.selected .dot-indicator {
+  background-color: #0A8F6A;
+  border-color: #0A8F6A;
+  box-shadow: 0 0 10px rgba(10, 143, 106, 0.4);
+}
+
+.multi-selected {
+  border-color: #0A8F6A !important;
+  background-color: rgba(10, 143, 106, 0.1) !important;
+}
+
+/* Checkbox Custom */
+.custom-checkbox input:checked+div {
+  background-color: #0A8F6A;
+  border-color: #0A8F6A;
+}
+
+/* CRITICAL FIX: Autofill Input Styles override */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #171717 inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}

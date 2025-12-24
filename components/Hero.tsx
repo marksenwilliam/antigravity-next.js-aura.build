@@ -5,19 +5,20 @@ import Link from "next/link";
 import Script from "next/script";
 
 export default function Hero() {
+    const [bgLoaded, setBgLoaded] = useState(false);
     // We can initialize the unicorn studio script here or in layout. keeping it simple.
     return (
         <section className="md:pt-48 md:pb-36 flex flex-col overflow-hidden text-center pt-32 pr-6 pb-24 pl-6 relative items-center">
             {/* Background Layers */}
-            <div className="aura-background-component fixed top-0 w-full h-[50vh] md:h-screen -z-10 opacity-100"
+            <div className="aura-background-component fixed top-0 w-full h-[50vh] md:h-screen -z-10 opacity-100 bg-black"
                 style={{ maskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)" }}
             >
-                <div className="aura-background-component top-0 w-full -z-10 absolute h-full">
+                <div className={`aura-background-component top-0 w-full -z-10 absolute h-full transition-opacity duration-1000 ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}>
                     <div data-us-project="BqS5vTHVEpn6NiF0g8iJ" className="absolute w-full h-full left-0 top-0 -z-10"></div>
                     {/* This script needs to run on client */}
                     <Script
                         src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js"
-                        strategy="lazyOnload"
+                        strategy="afterInteractive"
                         onLoad={() => {
                             // @ts-expect-error external script
                             if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
@@ -26,6 +27,8 @@ export default function Hero() {
                                 // @ts-expect-error external script
                                 window.UnicornStudio.isInitialized = true;
                             }
+                            // Small delay to allow canvas to render first frame before fading in
+                            setTimeout(() => setBgLoaded(true), 500);
                         }}
                     />
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-[#8C57EF] via-[#E65CB8] to-[#8C57EF] mix-blend-multiply z-0 pointer-events-none"></div>

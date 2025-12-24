@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv" className="scroll-smooth">
-      <body className={`${inter.variable} ${montserrat.variable} font-sans bg-black text-white antialiased`}>
+      <body suppressHydrationWarning className={`${inter.variable} ${montserrat.variable} font-sans bg-black text-white antialiased`}>
         {children}
       </body>
     </html>

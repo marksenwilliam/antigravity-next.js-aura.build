@@ -14,15 +14,13 @@ export default function Hero() {
 
         const observer = new IntersectionObserver(
             ([entry]) => {
-                // @ts-expect-error external script
-                if (window.UnicornStudio?.instances?.[0]) {
-                    // @ts-expect-error external script
+                const unicornStudio = (window as any).UnicornStudio;
+                if (unicornStudio?.instances?.[0]) {
+                    const instance = unicornStudio.instances[0];
                     if (entry.isIntersecting) {
-                        // @ts-expect-error external script
-                        window.UnicornStudio.instances[0].play?.();
+                        instance.play?.();
                     } else {
-                        // @ts-expect-error external script
-                        window.UnicornStudio.instances[0].pause?.();
+                        instance.pause?.();
                     }
                 }
             },
@@ -47,12 +45,10 @@ export default function Hero() {
                         src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js"
                         strategy="afterInteractive"
                         onLoad={() => {
-                            // @ts-expect-error external script
-                            if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
-                                // @ts-expect-error external script
-                                UnicornStudio.init();
-                                // @ts-expect-error external script
-                                window.UnicornStudio.isInitialized = true;
+                            const unicornStudio = (window as any).UnicornStudio;
+                            if (unicornStudio && !unicornStudio.isInitialized) {
+                                unicornStudio.init();
+                                unicornStudio.isInitialized = true;
                             }
                             // Small delay to allow canvas to render first frame before fading in
                             setTimeout(() => setBgLoaded(true), 500);

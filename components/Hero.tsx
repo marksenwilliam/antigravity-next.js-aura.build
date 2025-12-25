@@ -15,12 +15,24 @@ export default function Hero() {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 const unicornStudio = (window as any).UnicornStudio;
-                if (unicornStudio?.instances?.[0]) {
-                    const instance = unicornStudio.instances[0];
+                // Check both instances (default) and scenes (fallback)
+                const instance = unicornStudio?.instances?.[0] || unicornStudio?.scenes?.[0];
+
+                if (instance) {
                     if (entry.isIntersecting) {
-                        instance.play?.();
+                        // Use .play() if available, otherwise try setting isPaused = false
+                        if (typeof instance.play === 'function') {
+                            instance.play();
+                        } else if (instance.isPaused !== undefined) {
+                            instance.isPaused = false;
+                        }
                     } else {
-                        instance.pause?.();
+                        // Use .pause() if available, otherwise try setting isPaused = true
+                        if (typeof instance.pause === 'function') {
+                            instance.pause();
+                        } else if (instance.isPaused !== undefined) {
+                            instance.isPaused = true;
+                        }
                     }
                 }
             },

@@ -1,14 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Script from "next/script";
 
 export default function Hero() {
     const [bgLoaded, setBgLoaded] = useState(false);
+    const heroRef = useRef<HTMLElement>(null);
+
+    // Pause/resume animation based on visibility for performance
+    useEffect(() => {
+        if (!bgLoaded || !heroRef.current) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                // @ts-expect-error external script
+                if (window.UnicornStudio?.instances?.[0]) {
+                    // @ts-expect-error external script
+                    if (entry.isIntersecting) {
+                        // @ts-expect-error external script
+                        window.UnicornStudio.instances[0].play?.();
+                    } else {
+                        // @ts-expect-error external script
+                        window.UnicornStudio.instances[0].pause?.();
+                    }
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        observer.observe(heroRef.current);
+        return () => observer.disconnect();
+    }, [bgLoaded]);
+
     // We can initialize the unicorn studio script here or in layout. keeping it simple.
     return (
-        <section className="md:pt-48 md:pb-36 flex flex-col overflow-hidden text-center pt-32 pr-6 pb-24 pl-6 relative items-center">
+        <section ref={heroRef} className="md:pt-48 md:pb-36 flex flex-col overflow-hidden text-center pt-32 pr-6 pb-24 pl-6 relative items-center">
             {/* Background Layers */}
             <div className="aura-background-component fixed top-0 w-full h-[50vh] md:h-screen -z-10 opacity-100 bg-black"
                 style={{ maskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)" }}

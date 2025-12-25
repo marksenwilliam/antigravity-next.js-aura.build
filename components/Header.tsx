@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Header() {
     return (
-        <header className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/60 backdrop-blur-xl supports-[backdrop-filter]:bg-black/30">
+        <header className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/60 backdrop-blur-[10px] supports-[backdrop-filter]:bg-black/30">
             <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     {/* Logo placeholder if needed, or just text */}

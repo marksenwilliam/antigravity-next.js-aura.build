@@ -20,8 +20,7 @@ export default function Hero() {
             <div className="aura-background-component fixed top-0 w-full h-[50vh] md:h-screen -z-10 opacity-100 bg-black"
                 style={{ maskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)" }}
             >
-                {/* CSS Fallback gradient - always visible as base layer */}
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-[#8C57EF]/30 via-[#E65CB8]/20 to-[#8C57EF]/30 animate-pulse pointer-events-none" style={{ animationDuration: '4s' }}></div>
+
 
                 <div className={`aura-background-component top-0 w-full -z-10 absolute h-full transition-opacity duration-1000 ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}>
                     <video

@@ -50,16 +50,24 @@ export default function Hero() {
             <div className="aura-background-component fixed top-0 w-full h-[50vh] md:h-screen -z-10 opacity-100 bg-black"
                 style={{ maskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)" }}
             >
+                {/* CSS Fallback gradient - always visible as base layer */}
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-[#8C57EF]/30 via-[#E65CB8]/20 to-[#8C57EF]/30 animate-pulse pointer-events-none" style={{ animationDuration: '4s' }}></div>
+
                 <div className={`aura-background-component top-0 w-full -z-10 absolute h-full transition-opacity duration-1000 ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}>
-                    <div data-us-project="BqS5vTHVEpn6NiF0g8iJ" className="absolute w-full h-full left-0 top-0 -z-10"></div>
+                    <div data-us-project="BqS5vTHVEpn6NiF0g8iJ" data-us-scale="0.5" data-us-fps="30" data-us-dpi="1" className="absolute w-full h-full left-0 top-0 -z-10"></div>
                     {/* This script needs to run on client */}
                     <Script
                         src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js"
-                        strategy="afterInteractive"
+                        strategy="lazyOnload"
                         onLoad={() => {
                             const unicornStudio = (window as any).UnicornStudio;
                             if (unicornStudio && !unicornStudio.isInitialized) {
-                                unicornStudio.init();
+                                unicornStudio.init({
+                                    scale: 0.5,      // Render at half resolution
+                                    fps: 30,         // Cap at 30 FPS
+                                    dpi: 1,          // Use standard DPI (not retina)
+                                    lazyload: true   // Only load when in viewport
+                                });
                                 unicornStudio.isInitialized = true;
                             }
                             // Small delay to allow canvas to render first frame before fading in

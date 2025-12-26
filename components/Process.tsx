@@ -13,7 +13,7 @@ export function Process() {
     };
 
     return (
-        <section id="process" className="py-32 px-6 border-t border-white/5 bg-neutral-900/10 backdrop-blur-sm">
+        <section id="process" className="py-32 px-6 border-t border-white/5 bg-neutral-900/20">
             <div className="max-w-7xl mx-auto">
                 <motion.h2
                     initial="hidden"
@@ -146,7 +146,7 @@ export function About() {
     return (
         <section id="about" className="py-32 px-6 border-t border-white/5 relative z-10 overflow-hidden">
             {/* Background effects to match style */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-[#0A8F6A]/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-[#0A8F6A]/10 blur-[50px] rounded-full pointer-events-none -z-10"></div>
 
             <motion.div
                 initial="hidden"

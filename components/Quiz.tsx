@@ -146,7 +146,7 @@ export default function Quiz() {
 
     return (
         <section id="strategic-analysis" className="py-32 px-6 border-b border-white/5 relative z-10">
-            <div className="absolute inset-0 bg-[#0A8F6A]/5 blur-[120px] pointer-events-none rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4"></div>
+            <div className="absolute inset-0 bg-[#0A8F6A]/5 blur-[60px] pointer-events-none rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4"></div>
             <div className="max-w-4xl mx-auto relative">
                 <div className="text-center mb-12">
                     <motion.div

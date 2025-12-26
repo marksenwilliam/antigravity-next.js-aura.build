@@ -90,15 +90,15 @@ export default function Hero() {
                         className="group isolate inline-flex cursor-pointer overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_8px_rgba(10,143,106,0.35)] rounded-full relative shadow-[0_8px_40px_rgba(10,143,106,0.25)] w-full sm:w-auto justify-center"
                         style={{
                             // @ts-expect-error custom properties
-                            "--spread": "90deg", "--shimmer-color": "rgba(255,255,255,0.6)", "--radius": "9999px", "--speed": "4s", "--cut": "1px", "--bg": "rgba(255, 255, 255, 0.05)"
+                            "--spread": "90deg", "--shimmer-color": "rgba(255,255,255,0.4)", "--radius": "9999px", "--speed": "10s", "--cut": "1px", "--bg": "rgba(255, 255, 255, 0.05)"
                         }}
                     >
                         <div className="absolute inset-0">
-                            <div className="absolute inset-[-200%] w-[400%] h-[400%] [animation:rotate-gradient_var(--speed)_linear_infinite]">
+                            <div className="absolute inset-[-200%] w-[400%] h-[400%] [animation:rotate-gradient_var(--speed)_linear_infinite]" style={{ willChange: 'transform' }}>
                                 <div className="absolute inset-0 [background:conic-gradient(from_calc(270deg-(var(--spread)*0.5)),transparent_0,var(--shimmer-color)_var(--spread),transparent_var(--spread))]"></div>
                             </div>
                         </div>
-                        <div className="absolute rounded-full [background:var(--bg)] [inset:var(--cut)] backdrop-blur"></div>
+                        <div className="absolute rounded-full [background:var(--bg)] [inset:var(--cut)]"></div>
                         <div
                             className="z-10 flex gap-2 sm:w-auto overflow-hidden text-xs uppercase font-semibold tracking-wider text-white w-full py-3.5 px-8 relative items-center justify-center"
                             style={{ borderRadius: "9999px" }}
@@ -106,26 +106,9 @@ export default function Hero() {
                             <div
                                 style={{
                                     position: "absolute",
-                                    content: " ",
-                                    display: "block",
-                                    width: "200%",
-                                    height: "200%",
-                                    background:
-                                        "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), transparent)",
-                                    animation: "borderBeamRotation 4s infinite linear",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    pointerEvents: "none",
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    position: "absolute",
                                     inset: "1px",
                                     background: "rgba(10, 143, 106, 0.9)",
                                     borderRadius: "9999px",
-                                    backdropFilter: "blur(8px)",
                                 }}
                             ></div>
                             <span className="whitespace-nowrap z-10 relative">ta quiz</span>

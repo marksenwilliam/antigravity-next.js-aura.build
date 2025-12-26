@@ -2,46 +2,16 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import Script from "next/script";
 
 export default function Hero() {
     const [bgLoaded, setBgLoaded] = useState(false);
     const heroRef = useRef<HTMLElement>(null);
 
-    // Pause/resume animation based on visibility for performance
+    // Video background auto-handles playing, but we can verify it's loaded
     useEffect(() => {
-        if (!bgLoaded || !heroRef.current) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                const unicornStudio = (window as any).UnicornStudio;
-                // Check both instances (default) and scenes (fallback)
-                const instance = unicornStudio?.instances?.[0] || unicornStudio?.scenes?.[0];
-
-                if (instance) {
-                    if (entry.isIntersecting) {
-                        // Use .play() if available, otherwise try setting isPaused = false
-                        if (typeof instance.play === 'function') {
-                            instance.play();
-                        } else if (instance.isPaused !== undefined) {
-                            instance.isPaused = false;
-                        }
-                    } else {
-                        // Use .pause() if available, otherwise try setting isPaused = true
-                        if (typeof instance.pause === 'function') {
-                            instance.pause();
-                        } else if (instance.isPaused !== undefined) {
-                            instance.isPaused = true;
-                        }
-                    }
-                }
-            },
-            { threshold: 0.1 }
-        );
-
-        observer.observe(heroRef.current);
-        return () => observer.disconnect();
-    }, [bgLoaded]);
+        // Optional: Any additional setup if needed, otherwise this can be empty or removed
+        // For now, checks are handled in onCanPlay
+    }, []);
 
     // We can initialize the unicorn studio script here or in layout. keeping it simple.
     return (
@@ -54,26 +24,16 @@ export default function Hero() {
                 <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-[#8C57EF]/30 via-[#E65CB8]/20 to-[#8C57EF]/30 animate-pulse pointer-events-none" style={{ animationDuration: '4s' }}></div>
 
                 <div className={`aura-background-component top-0 w-full -z-10 absolute h-full transition-opacity duration-1000 ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}>
-                    <div data-us-project="BqS5vTHVEpn6NiF0g8iJ" data-us-scale="0.5" data-us-fps="30" data-us-dpi="1" className="absolute w-full h-full left-0 top-0 -z-10"></div>
-                    {/* This script needs to run on client */}
-                    <Script
-                        src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js"
-                        strategy="lazyOnload"
-                        onLoad={() => {
-                            const unicornStudio = (window as any).UnicornStudio;
-                            if (unicornStudio && !unicornStudio.isInitialized) {
-                                unicornStudio.init({
-                                    scale: 0.5,      // Render at half resolution
-                                    fps: 30,         // Cap at 30 FPS
-                                    dpi: 1,          // Use standard DPI (not retina)
-                                    lazyload: true   // Only load when in viewport
-                                });
-                                unicornStudio.isInitialized = true;
-                            }
-                            // Small delay to allow canvas to render first frame before fading in
-                            setTimeout(() => setBgLoaded(true), 500);
-                        }}
-                    />
+                    <video
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="absolute w-full h-full left-0 top-0 -z-10 object-cover opacity-80 mix-blend-screen"
+                        onCanPlay={() => setBgLoaded(true)}
+                    >
+                        <source src="/black_hole_remix_remix.mp4" type="video/mp4" />
+                    </video>
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-[#8C57EF] via-[#E65CB8] to-[#8C57EF] mix-blend-multiply z-0 pointer-events-none"></div>
                 </div>
             </div>

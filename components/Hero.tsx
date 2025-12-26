@@ -29,12 +29,11 @@ export default function Hero() {
                         muted
                         loop
                         playsInline
-                        className="absolute w-full h-full left-0 top-0 -z-10 object-cover opacity-80 mix-blend-screen"
+                        className="absolute w-full h-full left-0 top-0 -z-10 object-cover opacity-100"
                         onCanPlay={() => setBgLoaded(true)}
                     >
                         <source src="/black_hole_remix_remix.mp4" type="video/mp4" />
                     </video>
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-[#8C57EF] via-[#E65CB8] to-[#8C57EF] mix-blend-multiply z-0 pointer-events-none"></div>
                 </div>
             </div>
 

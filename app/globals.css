@@ -83,6 +83,24 @@
   }
 }
 
+@keyframes video-fade-loop {
+  0% {
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 1;
+  }
+
+  95% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 .accordion-content {
   transition: grid-template-rows 0.4s ease-out;
   display: grid;

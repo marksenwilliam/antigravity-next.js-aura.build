@@ -32,7 +32,7 @@ export default function Hero() {
                         className="absolute w-full h-full left-0 top-0 -z-10 object-cover"
                         style={{ animation: 'video-fade-loop 10s linear infinite' }}
                     >
-                        <source src="/black_hole_remix_remix.mp4" type="video/mp4" />
+                        <source src="/background.webm" type="video/webm" />
                     </video>
                 </div>
             </div>

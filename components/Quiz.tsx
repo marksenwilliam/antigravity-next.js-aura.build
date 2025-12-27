@@ -22,6 +22,7 @@ type FormData = {
     name?: string;
     email?: string;
     phone?: string;
+    domainUnknown?: boolean;
 };
 
 export default function Quiz() {
@@ -33,7 +34,7 @@ export default function Quiz() {
     const [isSuccess, setIsSuccess] = useState(false);
 
     // Helper to update form data
-    const updateData = (key: keyof FormData, value: string | string[]) => {
+    const updateData = (key: keyof FormData, value: string | string[] | boolean) => {
         setFormData((prev) => ({ ...prev, [key]: value }));
     };
 
@@ -78,9 +79,11 @@ export default function Quiz() {
         if (step === 4) {
             if (!domainChoice) return false;
             if (domainChoice === 'yes' && !formData.domain_name) return false;
-            // if choice is 'no', we allow empty wishlist for now or check it too? 
-            // Original code: if 'no', checked 'domain_wish'. Simplified here.
-            if (domainChoice === 'no' && !formData.domain_name) return false; // Let's require it
+            // if choice is 'no', we allow empty if "Vet ej" is checked
+            if (domainChoice === 'no') {
+                if (formData.domainUnknown) return true;
+                if (!formData.domain_name) return false;
+            }
             return true;
         }
         if (step === 5) return !!formData.reach;
@@ -299,11 +302,16 @@ export default function Quiz() {
                                         {/* Step 4: Domain */}
                                         {currentStep === 4 && (
                                             <div>
-                                                <h3 className="text-xl text-white font-medium mb-8 font-montserrat">Har du redan en domän?</h3>
+                                                <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Har du redan en domän?</h3>
+                                                <p className="text-neutral-400 text-sm font-light mb-8 max-w-2xl">
+                                                    En domän = nike.com, eller aftonbladet.se.
+                                                    <br />
+                                                    Din domän är adressen som din hemsida kommer leva på och förknippas med, namnet på din hemsida.
+                                                </p>
                                                 <div className="grid grid-cols-2 gap-6 mb-8">
                                                     {([{ val: "yes", label: "Ja" }, { val: "no", label: "Nej" }] as const).map(opt => (
                                                         <div key={opt.val}
-                                                            onClick={() => { setDomainChoice(opt.val); updateData("domain_type", opt.val); }}
+                                                            onClick={() => { setDomainChoice(opt.val); updateData("domain_type", opt.val); updateData("domainUnknown", false); }}
                                                             className={clsx(
                                                                 "quiz-option cursor-pointer p-8 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all text-center flex flex-col items-center justify-center gap-4 h-40",
                                                                 domainChoice === opt.val && "selected border-[#0A8F6A] bg-[#0A8F6A]/10"
@@ -319,8 +327,69 @@ export default function Quiz() {
                                                     </div>
                                                 )}
                                                 {domainChoice === "no" && (
-                                                    <div className="animate-in fade-in slide-in-from-top-4">
-                                                        <input type="text" placeholder="Önskad domän (t.ex. nymarks.se)" value={formData.domain_name || ""} onChange={(e) => updateData("domain_name", e.target.value)} className="w-full bg-neutral-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#0A8F6A]" />
+                                                    <div className="animate-in fade-in slide-in-from-top-4 space-y-6">
+                                                        <div className="relative">
+                                                            <input
+                                                                type="text"
+                                                                placeholder={formData.domainUnknown ? "Vet ej valt" : "Önskad domän (t.ex. nymarks.se)"}
+                                                                disabled={!!formData.domainUnknown}
+                                                                value={formData.domain_name || ""}
+                                                                onChange={(e) => {
+                                                                    const val = e.target.value;
+                                                                    updateData("domain_name", val);
+                                                                    // Simple suggestion logic
+                                                                    if (val.length > 2) {
+                                                                        // Simple suggestion logic - handled in render for specific suggestions
+                                                                    }
+                                                                }}
+                                                                className={clsx(
+                                                                    "w-full bg-neutral-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#0A8F6A] transition-opacity",
+                                                                    formData.domainUnknown && "opacity-50 cursor-not-allowed"
+                                                                )}
+                                                            />
+                                                            {/* Suggestions - Derived from current input */}
+                                                            {!formData.domainUnknown && formData.domain_name && formData.domain_name.length > 2 && (
+                                                                <div className="mt-3 flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-2">
+                                                                    {(() => {
+                                                                        const base = formData.domain_name?.split('.')[0] || "";
+                                                                        const smartSugs = [
+                                                                            `${base}solutions.se`,
+                                                                            `${base}.com`,
+                                                                            `${base}media.se`,
+                                                                            `${base}group.se`,
+                                                                            `${base}digital.se`
+                                                                        ];
+                                                                        return smartSugs.map(s => (
+                                                                            <span key={s}
+                                                                                onClick={() => updateData("domain_name", s)}
+                                                                                className="cursor-pointer px-3 py-1.5 rounded-full bg-[#0A8F6A]/10 border border-[#0A8F6A]/20 text-[#0A8F6A] text-xs font-medium hover:bg-[#0A8F6A]/20 transition-colors"
+                                                                            >
+                                                                                {s}
+                                                                            </span>
+                                                                        ));
+                                                                    })()}
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        <div
+                                                            onClick={() => {
+                                                                const newVal = !formData.domainUnknown;
+                                                                updateData("domainUnknown", newVal);
+                                                                if (newVal) updateData("domain_name", "");
+                                                            }}
+                                                            className="flex items-center gap-3 cursor-pointer group"
+                                                        >
+                                                            <div className={clsx(
+                                                                "w-5 h-5 rounded border flex items-center justify-center transition-colors",
+                                                                formData.domainUnknown ? "bg-[#0A8F6A] border-[#0A8F6A]" : "border-white/20 group-hover:border-white/40"
+                                                            )}>
+                                                                {formData.domainUnknown && <Check className="w-3 h-3 text-white" />}
+                                                            </div>
+                                                            <span className="text-sm text-neutral-400 group-hover:text-white transition-colors">
+                                                                Vet ej - öppen för förslag / rådgivning
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 )}
                                             </div>

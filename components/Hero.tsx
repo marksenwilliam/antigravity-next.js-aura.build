@@ -35,7 +35,7 @@ export default function Hero() {
                         loop
                         playsInline
                         preload="auto"
-                        className="absolute w-full h-full left-0 top-0 -z-10 object-cover"
+                        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 ${isMobile ? 'w-[200%] h-[200%] object-contain' : 'w-full h-full object-cover'}`}
                         style={{ animation: 'video-fade-loop 10s linear infinite' }}
                     >
                         <source src={isMobile ? "/background-mobile.webm" : "/background.webm"} type="video/webm" />

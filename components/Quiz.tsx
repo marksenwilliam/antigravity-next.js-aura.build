@@ -647,13 +647,35 @@ export default function Quiz() {
                                                                 <label className="text-xs text-neutral-400 font-medium uppercase">Hur många e-postkonton behöver du?</label>
                                                                 <span className="text-[#0A8F6A] font-bold text-sm">{emailCount} st</span>
                                                             </div>
+
+                                                            {/* Desktop: Slider */}
                                                             <input
                                                                 type="range"
                                                                 min="1"
                                                                 max="10"
                                                                 value={emailCount}
                                                                 onChange={handleEmailCountChange}
+                                                                className="hidden md:block w-full"
                                                             />
+
+                                                            {/* Mobile: Plus/Minus Buttons */}
+                                                            <div className="flex md:hidden items-center justify-center gap-6">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => emailCount > 1 && handleEmailCountChange({ target: { value: String(emailCount - 1) } } as React.ChangeEvent<HTMLInputElement>)}
+                                                                    className="w-14 h-14 rounded-full bg-white/5 border border-white/10 text-white text-2xl font-bold flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all"
+                                                                >
+                                                                    −
+                                                                </button>
+                                                                <span className="text-3xl font-bold text-white min-w-[60px] text-center">{emailCount}</span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => emailCount < 10 && handleEmailCountChange({ target: { value: String(emailCount + 1) } } as React.ChangeEvent<HTMLInputElement>)}
+                                                                    className="w-14 h-14 rounded-full bg-[#0A8F6A]/20 border border-[#0A8F6A]/30 text-[#0A8F6A] text-2xl font-bold flex items-center justify-center hover:bg-[#0A8F6A]/30 active:scale-95 transition-all"
+                                                                >
+                                                                    +
+                                                                </button>
+                                                            </div>
                                                         </div>
 
                                                         {/* Dynamic Email Name Inputs */}

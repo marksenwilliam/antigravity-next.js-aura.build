@@ -22,7 +22,7 @@ export default function Hero() {
                         loop
                         playsInline
                         preload="auto"
-                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-full h-full object-cover"
+                        className="absolute left-1/2 top-[60%] md:top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-full h-full object-cover"
                         style={{ animation: 'video-fade-loop 10s linear infinite' }}
                     >
                         <source src="/background.webm" type="video/webm" />

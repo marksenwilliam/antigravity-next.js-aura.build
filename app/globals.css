@@ -226,3 +226,15 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: white !important;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+/* Select Dropdown Styling */
+select {
+  background-color: rgba(23, 23, 23, 0.8) !important;
+  color: white;
+}
+
+select option {
+  background-color: #171717;
+  color: white;
+  padding: 12px;
+}

@@ -8,15 +8,18 @@ import clsx from "clsx";
 type FormData = {
     scope?: string;
     seo?: string;
-    gmb?: string;
+    gbp?: string;
     domain_type?: string;
     domain_name?: string;
     reach?: string;
-    ecom?: string;
-    blog?: string;
+    ecommerce?: string;
+    ecommerce_priority?: 'essential' | 'addon';
+    product_count?: string;
+    product_type?: string;
     updates?: string;
     mail?: string;
-    mail_count?: string;
+    mail_count?: number;
+    email_names?: string[];
     services?: string[];
     company?: string;
     name?: string;
@@ -34,8 +37,38 @@ export default function Quiz() {
     const [isSuccess, setIsSuccess] = useState(false);
 
     // Helper to update form data
-    const updateData = (key: keyof FormData, value: string | string[] | boolean) => {
+    const updateData = (key: keyof FormData, value: string | string[] | boolean | number) => {
         setFormData((prev) => ({ ...prev, [key]: value }));
+    };
+
+    // Smart Domain Suggestion Logic
+    const generateSmartSuggestions = (input: string): string[] => {
+        if (!input || input.length < 2) return [];
+
+        const cleanInput = input.toLowerCase().replace(/\s+/g, '').replace(/\.se$/, '').replace(/\.com$/, '');
+        const suffixes: string[] = [];
+
+        // Keywords
+        const construction = ['bygg', 'snick', 'mål', 'tak', 'mark', 'entreprenad', 'renovering', 'hus', 'montage'];
+        const beauty = ['frisör', 'hair', 'salong', 'beauty', 'hud', 'klinik', 'dental', 'massage', 'spa', 'naglar', 'lash'];
+        const tech = ['tech', 'data', 'it', 'web', 'app', 'code', 'soft', 'sys', 'dev'];
+        const consulting = ['konsult', 'jurist', 'ekonomi', 'redovisning', 'advokat', 'law', 'finance', 'consult'];
+
+        // Logic
+        if (construction.some(k => cleanInput.includes(k))) {
+            suffixes.push('entreprenad', 'bygg', 'projekt', 'service', 'gruppen');
+        } else if (beauty.some(k => cleanInput.includes(k))) {
+            suffixes.push('studio', 'klink', 'beauty', 'sthlm', 'care');
+        } else if (tech.some(k => cleanInput.includes(k))) {
+            suffixes.push('lab', 'digital', 'io', 'studio', 'solutions');
+        } else if (consulting.some(k => cleanInput.includes(k))) {
+            suffixes.push('partner', 'gruppen', 'konsult', 'associates', 'rådgivning');
+        } else {
+            // General
+            suffixes.push('group', 'ab', 'sverige', 'hq', 'official');
+        }
+
+        return suffixes.map(s => `${cleanInput}${s}.se`);
     };
 
     // Step 1: Scope
@@ -54,8 +87,29 @@ export default function Quiz() {
     // We need to track the "active" choice (Yes/No) to show the right input
     const [domainChoice, setDomainChoice] = useState<"yes" | "no" | null>(null);
 
-    // Step 9: Mail
+    // Step 8: Mail
     const [mailChoice, setMailChoice] = useState<"yes" | "no" | null>(null);
+    const [emailCount, setEmailCount] = useState(1);
+    const [emailNames, setEmailNames] = useState<string[]>([""]);
+
+    const handleEmailCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const count = parseInt(e.target.value);
+        setEmailCount(count);
+        updateData("mail_count", count);
+        // Resize email names array
+        const newNames = [...emailNames];
+        while (newNames.length < count) newNames.push("");
+        while (newNames.length > count) newNames.pop();
+        setEmailNames(newNames);
+        updateData("email_names", newNames);
+    };
+
+    const handleEmailNameChange = (index: number, value: string) => {
+        const newNames = [...emailNames];
+        newNames[index] = value;
+        setEmailNames(newNames);
+        updateData("email_names", newNames);
+    };
 
     // Step 10: Multi-select
     const toggleService = (service: string) => {
@@ -75,7 +129,7 @@ export default function Quiz() {
             return true;
         }
         if (step === 2) return !!formData.seo;
-        if (step === 3) return !!formData.gmb;
+        if (step === 3) return !!formData.gbp;
         if (step === 4) {
             if (!domainChoice) return false;
             if (domainChoice === 'yes' && !formData.domain_name) return false;
@@ -87,12 +141,19 @@ export default function Quiz() {
             return true;
         }
         if (step === 5) return !!formData.reach;
-        if (step === 6) return !!formData.ecom;
-        if (step === 7) return !!formData.blog;
-        if (step === 8) return !!formData.updates;
-        if (step === 9) return !!formData.mail; // Mail yes/no
-        if (step === 10) return true; // Optional? Or at least "selectedServices"
-        if (step === 11) {
+        if (step === 6) {
+            if (!formData.ecommerce) return false;
+            if (formData.ecommerce === 'yes') {
+                if (!formData.ecommerce_priority) return false;
+                if (!formData.product_count) return false;
+                if (!formData.product_type) return false;
+            }
+            return true;
+        }
+        if (step === 7) return !!formData.updates;
+        if (step === 8) return !!formData.mail; // Mail yes/no
+        if (step === 9) return true; // Optional? Or at least "selectedServices"
+        if (step === 10) {
             return !!formData.company && !!formData.name && !!formData.email && !!formData.phone;
         }
         return true;
@@ -102,17 +163,17 @@ export default function Quiz() {
         const isValid = validateStep(currentStep);
 
         if (isValid) {
-            if (currentStep === 10) {
+            if (currentStep === 9) {
                 // Commit services to formData
                 updateData("services", Array.from(selectedServices));
             }
-            if (currentStep < 11) {
+            if (currentStep < 10) {
                 setCurrentStep((prev) => prev + 1);
             } else {
                 handleSubmit();
             }
         } else {
-            alert("Vänligen fyll i alla obligatoriska fält.");
+            alert("Fyll i de obligatoriska fälten.");
         }
     };
 
@@ -130,7 +191,7 @@ export default function Quiz() {
     };
 
     // Render helpers
-    const getProgress = () => ((currentStep / 11) * 100) + "%";
+    const getProgress = () => ((currentStep / 10) * 100) + "%";
 
     const cardClass = (selected: boolean) => clsx(
         "quiz-option cursor-pointer p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all text-center flex flex-col items-center justify-center gap-2 h-36",
@@ -263,9 +324,9 @@ export default function Quiz() {
                                                 </p>
                                                 <div className="space-y-4">
                                                     {[
-                                                        { val: "primary", label: "Ja, SEO är min huvudsakliga strategi" },
-                                                        { val: "complementary", label: "Ja, men som ett komplement" },
-                                                        { val: "none", label: "Nej, jag får kunder på andra sätt och behöver därmed inte SEO" },
+                                                        { val: "primary", label: "Ja, jätte viktigt!" },
+                                                        { val: "complementary", label: "Ja, lite viktigt" },
+                                                        { val: "none", label: "Nej, inte så viktigt" },
                                                         { val: "consulting", label: "Vet ej – öppen för förslag / rådgivning" }
                                                     ].map(opt => (
                                                         <div key={opt.val} onClick={() => updateData("seo", opt.val)} className={listOptionClass(formData.seo === opt.val)}>
@@ -290,8 +351,8 @@ export default function Quiz() {
                                                         { val: "no", label: "Nej" },
                                                         { val: "consulting", label: "Vet ej - öppen för förslag / rådgivning" }
                                                     ].map(opt => (
-                                                        <div key={opt.val} onClick={() => updateData("gmb", opt.val)} className={listOptionClass(formData.gmb === opt.val)}>
-                                                            <div className={dotClass(formData.gmb === opt.val)}></div>
+                                                        <div key={opt.val} onClick={() => updateData("gbp", opt.val)} className={listOptionClass(formData.gbp === opt.val)}>
+                                                            <div className={dotClass(formData.gbp === opt.val)}></div>
                                                             <span className="text-sm text-white">{opt.label}</span>
                                                         </div>
                                                     ))}
@@ -351,14 +412,7 @@ export default function Quiz() {
                                                             {!formData.domainUnknown && formData.domain_name && formData.domain_name.length > 2 && (
                                                                 <div className="mt-3 flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-2">
                                                                     {(() => {
-                                                                        const base = formData.domain_name?.split('.')[0] || "";
-                                                                        const smartSugs = [
-                                                                            `${base}solutions.se`,
-                                                                            `${base}.com`,
-                                                                            `${base}media.se`,
-                                                                            `${base}group.se`,
-                                                                            `${base}digital.se`
-                                                                        ];
+                                                                        const smartSugs = generateSmartSuggestions(formData.domain_name || "");
                                                                         return smartSugs.map(s => (
                                                                             <span key={s}
                                                                                 onClick={() => updateData("domain_name", s)}
@@ -398,77 +452,148 @@ export default function Quiz() {
                                         {/* Step 5: Reach */}
                                         {currentStep === 5 && (
                                             <div>
-                                                <h3 className="text-xl text-white font-medium mb-8 font-montserrat">Var finns dina kunder?</h3>
-                                                <div className="space-y-4">
-                                                    {[
-                                                        { val: "local", label: "Lokalt" },
-                                                        { val: "national", label: "Nationellt" }
-                                                    ].map(opt => (
-                                                        <div key={opt.val} onClick={() => updateData("reach", opt.val)} className={listOptionClass(formData.reach === opt.val)}>
-                                                            <span className="text-sm text-white">{opt.label}</span>
+                                                <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Var finns dina kunder?</h3>
+                                                <p className="text-neutral-400 text-sm font-light mb-8 max-w-2xl">
+                                                    Beroende på din marknad (lokal / nationell / internationell) så avgör det väldigt mycket hur din hemsida behöver byggas upp.
+                                                </p>
+                                                <div className="grid grid-cols-1 gap-4">
+                                                    {['Lokalt', 'Nationellt', 'Internationellt'].map((opt) => (
+                                                        <div key={opt}
+                                                            onClick={() => updateData("reach", opt)}
+                                                            className={clsx(
+                                                                "quiz-option cursor-pointer p-6 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all flex items-center justify-between group",
+                                                                formData.reach === opt && "selected border-[#0A8F6A] bg-[#0A8F6A]/10"
+                                                            )}
+                                                        >
+                                                            <span className="text-white font-medium group-hover:translate-x-1 transition-transform">{opt}</span>
+                                                            {formData.reach === opt && <div className="w-2 h-2 rounded-full bg-[#0A8F6A] shadow-[0_0_10px_#0A8F6A]" />}
                                                         </div>
                                                     ))}
                                                 </div>
                                             </div>
                                         )}
 
-                                        {/* Step 6: Ecom */}
+                                        {/* Step 6: Ecommerce */}
                                         {currentStep === 6 && (
                                             <div>
-                                                <h3 className="text-xl text-white font-medium mb-8 font-montserrat">Behöver du e-handel?</h3>
-                                                <div className="grid grid-cols-2 gap-6">
-                                                    {[{ val: "yes", label: "Ja" }, { val: "no", label: "Nej" }].map(opt => (
-                                                        <div key={opt.val} onClick={() => updateData("ecom", opt.val)}
+                                                <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Behöver du e-handel?</h3>
+                                                <p className="text-neutral-400 text-sm font-light mb-8 max-w-2xl">
+                                                    Vill du sälja produkter och/eller tjänster på din hemsida med möjlighet för utcheckning och betalning direkt på hemsidan?
+                                                </p>
+                                                <div className="grid grid-cols-2 gap-6 mb-8">
+                                                    {([{ val: "yes", label: "Ja" }, { val: "no", label: "Nej" }] as const).map(opt => (
+                                                        <div key={opt.val}
+                                                            onClick={() => {
+                                                                updateData("ecommerce", opt.val);
+                                                                // Clear sub-fields if switching to no
+                                                                if (opt.val === 'no') {
+                                                                    updateData("ecommerce_priority", "");
+                                                                    updateData("product_count", "");
+                                                                    updateData("product_type", "");
+                                                                }
+                                                            }}
                                                             className={clsx(
-                                                                "quiz-option cursor-pointer p-8 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all text-center flex flex-col items-center justify-center gap-4 h-40",
-                                                                formData.ecom === opt.val && "selected border-[#0A8F6A] bg-[#0A8F6A]/10"
+                                                                "quiz-option cursor-pointer p-8 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all text-center flex flex-col items-center justify-center gap-4 h-32",
+                                                                formData.ecommerce === opt.val && "selected border-[#0A8F6A] bg-[#0A8F6A]/10"
                                                             )}
                                                         >
                                                             <span className="text-white font-medium">{opt.label}</span>
                                                         </div>
                                                     ))}
                                                 </div>
+
+                                                {/* Conditional Sub-questions for Ecommerce = Yes */}
+                                                {formData.ecommerce === 'yes' && (
+                                                    <div className="animate-in fade-in slide-in-from-top-4 space-y-8 border-t border-white/10 pt-8 mt-8">
+
+                                                        {/* Priority */}
+                                                        <div className="space-y-4">
+                                                            <h4 className="text-white text-sm font-medium opacity-90">Hur viktig är e-handeln?</h4>
+                                                            <div className="grid grid-cols-1 gap-3">
+                                                                {[
+                                                                    { id: 'essential', label: 'E-handel är väsentligt för min hemsida' },
+                                                                    { id: 'addon', label: 'E-handel är en liten del av min hemsida' }
+                                                                ].map((p) => (
+                                                                    <div key={p.id}
+                                                                        onClick={() => updateData("ecommerce_priority", p.id)}
+                                                                        className={clsx(
+                                                                            "cursor-pointer p-4 rounded-lg border transition-all flex items-center gap-3",
+                                                                            formData.ecommerce_priority === p.id
+                                                                                ? "border-[#0A8F6A] bg-[#0A8F6A]/10"
+                                                                                : "border-white/10 bg-white/5 hover:bg-white/10"
+                                                                        )}
+                                                                    >
+                                                                        <div className={clsx(
+                                                                            "w-4 h-4 rounded-full border flex items-center justify-center",
+                                                                            formData.ecommerce_priority === p.id ? "border-[#0A8F6A]" : "border-white/30"
+                                                                        )}>
+                                                                            {formData.ecommerce_priority === p.id && <div className="w-2 h-2 rounded-full bg-[#0A8F6A]" />}
+                                                                        </div>
+                                                                        <span className="text-sm text-white/90">{p.label}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Product Count */}
+                                                        <div className="space-y-3">
+                                                            <label className="text-white text-sm font-medium opacity-90">
+                                                                Hur många produkter/tjänster har du tänkt inkludera?
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                placeholder="t.ex. 10-20 st, eller ca 500 st"
+                                                                value={formData.product_count || ""}
+                                                                onChange={(e) => updateData("product_count", e.target.value)}
+                                                                className="w-full bg-neutral-900/50 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#0A8F6A]"
+                                                            />
+                                                        </div>
+
+                                                        {/* Product Type */}
+                                                        <div className="space-y-3">
+                                                            <label className="text-white text-sm font-medium opacity-90">
+                                                                Vad säljer du för typ av produkter/tjänster?
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                placeholder="t.ex. Kläder, Digitala kurser, Hantverk..."
+                                                                value={formData.product_type || ""}
+                                                                onChange={(e) => updateData("product_type", e.target.value)}
+                                                                className="w-full bg-neutral-900/50 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#0A8F6A]"
+                                                            />
+                                                        </div>
+
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
 
-                                        {/* Step 7: Blog */}
+                                        {/* Step 7: Updates - Renumbered from 8 (Blog removed) */}
                                         {currentStep === 7 && (
                                             <div>
-                                                <h3 className="text-xl text-white font-medium mb-4 font-montserrat">Behöver du en blogg?</h3>
+                                                <h3 className="text-xl text-white font-medium mb-8 font-montserrat">Hur ofta kommer din hemsida behöva uppdateras och underhållas?</h3>
                                                 <div className="space-y-4">
                                                     {[
-                                                        { val: "yes", label: "Ja" },
-                                                        { val: "no", label: "Nej" }
-                                                    ].map(opt => (
-                                                        <div key={opt.val} onClick={() => updateData("blog", opt.val)} className={listOptionClass(formData.blog === opt.val)}>
-                                                            <span className="text-sm text-white">{opt.label}</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Step 8: Updates */}
-                                        {currentStep === 8 && (
-                                            <div>
-                                                <h3 className="text-xl text-white font-medium mb-8 font-montserrat">Uppdatering?</h3>
-                                                <div className="space-y-4">
-                                                    {[
-                                                        { val: "static", label: "Nej, statisk" },
-                                                        { val: "active", label: "Ja, löpande" }
+                                                        { val: "rarely", label: "Sällan, 1-2 gånger per år" },
+                                                        { val: "occasionally", label: "Ibland, 1-2 gånger i månaden" },
+                                                        { val: "regularly", label: "Ofta, 1-2+ gånger i veckan" }
                                                     ].map(opt => (
                                                         <div key={opt.val} onClick={() => updateData("updates", opt.val)} className={listOptionClass(formData.updates === opt.val)}>
-                                                            <span className="text-sm text-white">{opt.label}</span>
+                                                            <div className={dotClass(formData.updates === opt.val)}></div>
+                                                            <span className="text-sm text-white text-left leading-relaxed">{opt.label}</span>
                                                         </div>
                                                     ))}
                                                 </div>
                                             </div>
                                         )}
 
-                                        {/* Step 9: Mail */}
-                                        {currentStep === 9 && (
+                                        {/* Step 8: Mail */}
+                                        {currentStep === 8 && (
                                             <div>
-                                                <h3 className="text-xl text-white font-medium mb-8 font-montserrat">Företagsmail?</h3>
+                                                <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Behöver du företagsmail?</h3>
+                                                <p className="text-neutral-400 text-sm font-light mb-8 max-w-2xl">
+                                                    Behöver du en "info@dittforetag.se" eller "david@dittforetag.se"? Vi hjälper dig sätta upp professionella emailkonton.
+                                                </p>
                                                 <div className="grid grid-cols-2 gap-6 mb-8">
                                                     {([{ val: "yes", label: "Ja" }, { val: "no", label: "Nej" }] as const).map(opt => (
                                                         <div key={opt.val} onClick={() => { setMailChoice(opt.val); updateData("mail", opt.val); }}
@@ -482,26 +607,52 @@ export default function Quiz() {
                                                     ))}
                                                 </div>
                                                 {mailChoice === "yes" && (
-                                                    <div className="animate-in fade-in slide-in-from-top-4">
-                                                        <select
-                                                            className="w-full bg-neutral-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#0A8F6A]"
-                                                            onChange={(e) => updateData("mail_count", e.target.value)}
-                                                        >
-                                                            <option value="1">1 st</option>
-                                                            <option value="2-5">2-5 st</option>
-                                                            <option value="5+">5+ st</option>
-                                                        </select>
+                                                    <div className="animate-in fade-in slide-in-from-top-4 space-y-6">
+                                                        {/* Slider */}
+                                                        <div className="bg-neutral-900/30 border border-white/10 rounded-xl p-6">
+                                                            <div className="flex justify-between mb-4">
+                                                                <label className="text-xs text-neutral-400 font-medium uppercase">Hur många e-postkonton behöver du?</label>
+                                                                <span className="text-[#0A8F6A] font-bold text-sm">{emailCount} st</span>
+                                                            </div>
+                                                            <input
+                                                                type="range"
+                                                                min="1"
+                                                                max="10"
+                                                                value={emailCount}
+                                                                onChange={handleEmailCountChange}
+                                                            />
+                                                        </div>
+
+                                                        {/* Dynamic Email Name Inputs */}
+                                                        <div className="space-y-3">
+                                                            <p className="text-neutral-400 text-sm font-light">Vad ska e-postkontona heta?</p>
+                                                            {emailNames.map((name, index) => (
+                                                                <div key={index} className="flex items-center gap-3">
+                                                                    <span className="text-[#0A8F6A] font-bold text-sm w-6">{index + 1}.</span>
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder={`t.ex. ${index === 0 ? 'william' : index === 1 ? 'info' : 'faktura'}@dittforetag.se`}
+                                                                        value={name}
+                                                                        onChange={(e) => handleEmailNameChange(index, e.target.value)}
+                                                                        className="flex-1 bg-neutral-900/50 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#0A8F6A] transition-colors placeholder:text-neutral-600"
+                                                                    />
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     </div>
                                                 )}
                                             </div>
                                         )}
 
-                                        {/* Step 10: Other */}
-                                        {currentStep === 10 && (
+                                        {/* Step 9: Other */}
+                                        {currentStep === 9 && (
                                             <div>
-                                                <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Andra tjänster?</h3>
+                                                <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Är du intresserad av våra andra tjänster?</h3>
+                                                <p className="text-neutral-400 text-sm font-light mb-8 max-w-2xl">
+                                                    Vi gör hela paketet. Allt ifrån hemsida och digital annonsering till professionell videoproduktion med kameraman ute på plats hos dig.
+                                                </p>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {[{ val: "google_ads", label: "Google Ads" }, { val: "meta_ads", label: "Meta Ads" }].map(opt => (
+                                                    {[{ val: "google_ads", label: "Google Ads" }, { val: "meta_ads", label: "Meta Ads" }, { val: "video_content", label: "Videoproduktion & content" }].map(opt => (
                                                         <div key={opt.val}
                                                             onClick={() => toggleService(opt.val)}
                                                             className={clsx(
@@ -516,8 +667,8 @@ export default function Quiz() {
                                             </div>
                                         )}
 
-                                        {/* Step 11: Final */}
-                                        {currentStep === 11 && (
+                                        {/* Step 10: Final */}
+                                        {currentStep === 10 && (
                                             <div>
                                                 <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Grundinformation</h3>
                                                 <p className="text-rose-400 text-xs font-semibold uppercase tracking-wide mb-8 animate-pulse">
@@ -531,6 +682,7 @@ export default function Quiz() {
                                                                 {field === 'name' && "Namn"}
                                                                 {field === 'email' && "E-post"}
                                                                 {field === 'phone' && "Telefon"}
+                                                                <span className="text-rose-500 ml-1">*</span>
                                                             </label>
                                                             <input
                                                                 type={field === 'email' ? 'email' : 'text'}
@@ -567,7 +719,7 @@ export default function Quiz() {
                                 >
                                     Tillbaka
                                 </button>
-                                {currentStep < 11 ? (
+                                {currentStep < 10 ? (
                                     <button
                                         type="button"
                                         onClick={handleNext}

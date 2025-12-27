@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
 
 export const metadata: Metadata = {
-  title: "ATMOS LAUNCH KIT | Webbdesign frågeformulär",
-  description: "Webbdesign frågeformulär och strategisk analys för ditt varumärke.",
+  title: "Marksen Media | Webbdesign, SEO & Digital Marknadsföring",
+  description: "Vi hjälper företag att dominera sin marknad med strategisk webbdesign, SEO och digital marknadsföring. Bygg ett varumärke som syns, konverterar och växer.",
 };
 
 export default function RootLayout({

@@ -26,13 +26,13 @@ export default function WhyUs() {
                         Ditt varumärke jobbar inte lika hårt som du gör.
                     </h2>
                     <div className="space-y-6">
-                        <p className="text-neutral-400 text-sm md:text-base font-light leading-relaxed">
+                        <p className="text-neutral-300 text-sm md:text-base font-light leading-relaxed">
                             Du lägger tid, energi och ansvar på att bygga ditt företag. Men om
                             ditt varumärke och din digitala profil inte når ut och speglar
                             kvalitén på ditt arbete riskerar du att bli förbisedd,
                             undervärderad eller bortvald.
                         </p>
-                        <p className="text-neutral-400 text-sm md:text-base font-light leading-relaxed">
+                        <p className="text-neutral-300 text-sm md:text-base font-light leading-relaxed">
                             Ens digitala profil och varumärke ska inte bara se bra ut. Det ska
                             arbeta för dig – varje dag.
                         </p>
@@ -81,7 +81,7 @@ export default function WhyUs() {
                                 <h4 className="text-white text-sm font-medium border-l-2 border-neutral-800 group-hover:border-[#0A8F6A] pl-4 transition-colors font-montserrat">
                                     {item.title}
                                 </h4>
-                                <p className="text-neutral-500 text-sm font-light leading-relaxed pl-4.5">
+                                <p className="text-neutral-300 text-sm font-light leading-relaxed pl-4.5">
                                     {item.desc}
                                 </p>
                             </div>

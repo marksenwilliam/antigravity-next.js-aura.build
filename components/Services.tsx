@@ -50,7 +50,7 @@ export default function Services() {
                     {/* PRIMARY SERVICES (Top Row) */}
 
                     {/* SEO & Organisk Tillväxt */}
-                    <div className="glass-panel p-10 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-[#0A8F6A]/30 transition-all duration-300 group flex flex-col justify-between h-full min-h-[420px]">
+                    <div className="glass-panel p-10 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] hover:border-[#0A8F6A]/30 transition-all duration-300 group flex flex-col justify-between h-full min-h-[420px]">
                         <div>
                             <div className="w-12 h-12 rounded-lg bg-[#0A8F6A]/5 border border-[#0A8F6A]/10 flex items-center justify-center text-[#0A8F6A] mb-8 group-hover:bg-[#0A8F6A]/10 transition-colors">
                                 <TrendingUp className="w-6 h-6 stroke-[1.5]" />
@@ -58,7 +58,7 @@ export default function Services() {
                             <h3 className="text-xl font-medium text-white mb-4 tracking-tight font-montserrat">
                                 SEO & Organisk Tillväxt
                             </h3>
-                            <p className="text-neutral-400 text-sm font-light leading-relaxed">
+                            <p className="text-neutral-300 text-base font-light leading-relaxed">
                                 Sluta jaga kunder – låt dem hitta dig. Vi bygger den digitala
                                 auktoritet som krävs för att du ska äga sökresultaten och bli
                                 det självklara valet i din bransch.
@@ -72,21 +72,25 @@ export default function Services() {
                     </div>
 
                     {/* Webbdesign & Arkitektur (HERO) */}
-                    <div className="glass-panel p-10 rounded-2xl border border-[#0A8F6A]/30 bg-gradient-to-b from-white/[0.06] to-transparent hover:border-[#0A8F6A]/60 transition-all duration-300 group relative z-10 shadow-[0_0_50px_-10px_rgba(10,143,106,0.15)] flex flex-col justify-between h-full min-h-[420px]">
-                        <div>
+                    <div className="hero-card-float glass-panel p-10 rounded-2xl border border-[#0A8F6A]/30 bg-gradient-to-b from-white/[0.06] to-transparent hover:border-[#0A8F6A]/60 group relative z-10 shadow-[0_0_50px_-10px_rgba(10,143,106,0.15)] flex flex-col justify-between h-full min-h-[420px] overflow-hidden hover:shadow-[0_30px_80px_-15px_rgba(10,143,106,0.35)]">
+                        {/* Shine overlay */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none overflow-hidden rounded-2xl">
+                            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+                        </div>
+                        <div className="relative z-10">
                             <div className="w-12 h-12 rounded-lg bg-[#0A8F6A] flex items-center justify-center text-white mb-8 shadow-lg shadow-[#0A8F6A]/20">
                                 <LayoutTemplate className="w-6 h-6 stroke-[1.5]" />
                             </div>
                             <h3 className="text-2xl font-medium text-white mb-4 tracking-tight font-montserrat">
                                 Webbdesign & Arkitektur
                             </h3>
-                            <p className="text-neutral-300 text-sm font-light leading-relaxed">
+                            <p className="text-neutral-200 text-base font-light leading-relaxed">
                                 Navet i din affär. Vi skapar en digital närvaro som omedelbart
                                 signalerar marknadsledarskap, bygger förtroende och konverterar
                                 besökare till lönsamma affärer.
                             </p>
                         </div>
-                        <div className="mt-8 pt-8 border-t border-white/10">
+                        <div className="mt-8 pt-8 border-t border-white/10 relative z-10">
                             <span className="text-[10px] uppercase tracking-widest text-[#0A8F6A] font-semibold">
                                 Affärskritisk Plattform
                             </span>
@@ -94,7 +98,7 @@ export default function Services() {
                     </div>
 
                     {/* Google Ads */}
-                    <div className="glass-panel p-10 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-[#0A8F6A]/30 transition-all duration-300 group flex flex-col justify-between h-full min-h-[420px]">
+                    <div className="glass-panel p-10 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] hover:border-[#0A8F6A]/30 transition-all duration-300 group flex flex-col justify-between h-full min-h-[420px]">
                         <div>
                             <div className="w-12 h-12 rounded-lg bg-[#0A8F6A]/5 border border-[#0A8F6A]/10 flex items-center justify-center text-[#0A8F6A] mb-8 group-hover:bg-[#0A8F6A]/10 transition-colors">
                                 <MousePointerClick className="w-6 h-6 stroke-[1.5]" />
@@ -102,7 +106,7 @@ export default function Services() {
                             <h3 className="text-xl font-medium text-white mb-4 tracking-tight font-montserrat">
                                 Google Ads
                             </h3>
-                            <p className="text-neutral-400 text-sm font-light leading-relaxed">
+                            <p className="text-neutral-300 text-base font-light leading-relaxed">
                                 Fånga köpintresse i realtid. Vi placerar ditt erbjudande framför
                                 rätt kund exakt när köpbeslutet fattas. Mätbar avkastning och
                                 omedelbart kassaflöde.
@@ -126,7 +130,7 @@ export default function Services() {
                             <h3 className="text-lg font-medium text-white mb-3 tracking-tight font-montserrat">
                                 Meta Ads
                             </h3>
-                            <p className="text-neutral-500 text-xs font-light leading-relaxed">
+                            <p className="text-neutral-300 text-sm font-light leading-relaxed">
                                 Driv omedelbar försäljning och mätbar återbäring (ROAS). Vi skapar träffsäkra kampanjer på Facebook och Instagram som konverterar kalla målgrupper till nya, betalande kunder omgående.
                             </p>
                         </div>
@@ -146,7 +150,7 @@ export default function Services() {
                             <h3 className="text-lg font-medium text-white mb-3 tracking-tight font-montserrat">
                                 Videoproduktion
                             </h3>
-                            <p className="text-neutral-500 text-xs font-light leading-relaxed">
+                            <p className="text-neutral-300 text-sm font-light leading-relaxed">
                                 Kraftfull varumärkesexponering genom storytelling. Högkvalitativt rörligt material som stärker din position, bygger emotionella band och ökar engagemanget i alla digitala kanaler.
                             </p>
                         </div>
@@ -166,7 +170,7 @@ export default function Services() {
                             <h3 className="text-lg font-medium text-white mb-3 tracking-tight font-montserrat">
                                 Landningssidor
                             </h3>
-                            <p className="text-neutral-500 text-xs font-light leading-relaxed">
+                            <p className="text-neutral-300 text-sm font-light leading-relaxed">
                                 Psykologiskt optimerade landningssidor (LPs) med ett enda mål: konvertering. Vi förvandlar trafik till försäljning genom skarp copy och distraktionsfri design som maximerar dina resultat.
                             </p>
                         </div>

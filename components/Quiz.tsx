@@ -183,11 +183,35 @@ export default function Quiz() {
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setIsSubmitting(false);
-        setIsSuccess(true);
-        // Scroll element into view if needed
+
+        try {
+            // Include services and email names in the submission
+            const submissionData = {
+                ...formData,
+                services: Array.from(selectedServices),
+                email_names: emailNames,
+                mail_count: emailCount
+            };
+
+            const response = await fetch('/api/quiz', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(submissionData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to submit');
+            }
+
+            setIsSuccess(true);
+        } catch (error) {
+            console.error('Submission error:', error);
+            alert('Något gick fel. Försök igen eller kontakta oss direkt.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     // Render helpers

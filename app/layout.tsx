@@ -17,6 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <link rel="preload" href="/black_hole_remix_remix.mp4" as="video" type="video/mp4" />
+      </head>
       <body suppressHydrationWarning className={`${inter.variable} ${montserrat.variable} font-sans bg-black text-white antialiased`}>
         {children}
       </body>

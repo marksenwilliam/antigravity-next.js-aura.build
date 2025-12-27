@@ -22,15 +22,15 @@ export default function Hero() {
             >
 
 
-                <div className={`aura-background-component top-0 w-full -z-10 absolute h-full transition-opacity duration-1000 ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}>
+                <div className="aura-background-component top-0 w-full -z-10 absolute h-full">
                     <video
                         autoPlay
                         muted
                         loop
                         playsInline
-                        className="absolute w-full h-full left-0 top-0 -z-10 object-cover opacity-100"
+                        preload="auto"
+                        className="absolute w-full h-full left-0 top-0 -z-10 object-cover"
                         style={{ animation: 'video-fade-loop 10s linear infinite' }}
-                        onCanPlay={() => setBgLoaded(true)}
                     >
                         <source src="/black_hole_remix_remix.mp4" type="video/mp4" />
                     </video>

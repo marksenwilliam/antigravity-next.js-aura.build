@@ -254,12 +254,15 @@ export default function Quiz() {
                                         {/* Step 2: SEO */}
                                         {currentStep === 2 && (
                                             <div>
-                                                <h3 className="text-xl text-white font-medium mb-8 font-montserrat">Är SEO en viktig del av din tillväxt?</h3>
+                                                <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Är SEO en viktig del av din tillväxt?</h3>
+                                                <p className="text-neutral-400 text-sm font-light mb-8 max-w-2xl">
+                                                    SEO = sökmotor optimering, eller med andra ord det som gör att du syns högst upp i sökresultaten när folk googlar efter dina tjänster.
+                                                </p>
                                                 <div className="space-y-4">
                                                     {[
                                                         { val: "primary", label: "Ja, SEO är min huvudsakliga strategi" },
                                                         { val: "complementary", label: "Ja, men som ett komplement" },
-                                                        { val: "none", label: "Nej, jag behöver inte SEO" },
+                                                        { val: "none", label: "Nej, jag får kunder på andra sätt och behöver därmed inte SEO" },
                                                         { val: "consulting", label: "Vet ej – öppen för förslag / rådgivning" }
                                                     ].map(opt => (
                                                         <div key={opt.val} onClick={() => updateData("seo", opt.val)} className={listOptionClass(formData.seo === opt.val)}>
@@ -274,11 +277,15 @@ export default function Quiz() {
                                         {/* Step 3: GMB */}
                                         {currentStep === 3 && (
                                             <div>
-                                                <h3 className="text-xl text-white font-medium mb-4 font-montserrat">Google Business Profile</h3>
+                                                <h3 className="text-xl text-white font-medium mb-2 font-montserrat">Vill du att vi sätter upp och/eller optimerar din Google Business Profile?</h3>
+                                                <p className="text-neutral-400 text-sm font-light mb-8 max-w-2xl">
+                                                    Detta är avgörande för lokala företag (verksamheter som gör affärer i sin stad/närområde snarare än nationellt) för att synas på kartor och lokala sökningar.
+                                                </p>
                                                 <div className="space-y-4">
                                                     {[
                                                         { val: "yes", label: "Ja" },
-                                                        { val: "no", label: "Nej" }
+                                                        { val: "no", label: "Nej" },
+                                                        { val: "consulting", label: "Vet ej - öppen för förslag / rådgivning" }
                                                     ].map(opt => (
                                                         <div key={opt.val} onClick={() => updateData("gmb", opt.val)} className={listOptionClass(formData.gmb === opt.val)}>
                                                             <div className={dotClass(formData.gmb === opt.val)}></div>
@@ -495,7 +502,7 @@ export default function Quiz() {
                                     <button
                                         type="button"
                                         onClick={handleNext}
-                                        className="flex items-center gap-2 px-8 py-3 bg-[#0A8F6A] hover:bg-[#097a5b] text-white text-xs uppercase font-semibold tracking-wider rounded transition-all shadow-[0_4px_20px_rgba(10,143,106,0.3)]"
+                                        className="flex items-center gap-2 px-8 py-3 bg-[#0A8F6A] hover:bg-[#097a5b] active:scale-[0.98] hover:scale-[1.02] hover:brightness-110 text-white text-xs uppercase font-semibold tracking-wider rounded transition-all shadow-[0_4px_20px_rgba(10,143,106,0.3)] duration-200"
                                     >
                                         <span>Fortsätt</span>
                                         <ChevronRight className="w-4 h-4" />

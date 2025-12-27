@@ -35,6 +35,7 @@ export default function Quiz() {
     const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [validationError, setValidationError] = useState<string | null>(null);
 
     // Helper to update form data
     const updateData = (key: keyof FormData, value: string | string[] | boolean | number) => {
@@ -163,6 +164,7 @@ export default function Quiz() {
         const isValid = validateStep(currentStep);
 
         if (isValid) {
+            setValidationError(null);
             if (currentStep === 9) {
                 // Commit services to formData
                 updateData("services", Array.from(selectedServices));
@@ -173,7 +175,7 @@ export default function Quiz() {
                 handleSubmit();
             }
         } else {
-            alert("Fyll i de obligatoriska fälten.");
+            setValidationError("Fyll i ett av alternativen för att gå vidare.");
         }
     };
 
@@ -286,7 +288,7 @@ export default function Quiz() {
                     ) : (
                         <>
                             {/* Progress Bar */}
-                            <div className="w-full h-1 bg-white/5 rounded-full mb-10 overflow-hidden relative">
+                            <div className="w-full h-1 bg-white/5 rounded-full mb-4 overflow-hidden relative">
                                 <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: getProgress() }}
@@ -294,6 +296,13 @@ export default function Quiz() {
                                     className="h-full bg-[#0A8F6A] shadow-[0_0_10px_#0A8F6A]"
                                 ></motion.div>
                             </div>
+
+                            {/* Validation Error Message */}
+                            {validationError && (
+                                <div className="mb-6 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm text-center animate-in fade-in slide-in-from-top-2">
+                                    {validationError}
+                                </div>
+                            )}
 
                             {/* Form Content */}
                             <div className="flex-grow flex flex-col relative">

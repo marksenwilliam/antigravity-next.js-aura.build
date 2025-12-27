@@ -5,12 +5,17 @@ import Link from "next/link";
 
 export default function Hero() {
     const [bgLoaded, setBgLoaded] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const heroRef = useRef<HTMLElement>(null);
 
-    // Video background auto-handles playing, but we can verify it's loaded
+    // Detect mobile screen size
     useEffect(() => {
-        // Optional: Any additional setup if needed, otherwise this can be empty or removed
-        // For now, checks are handled in onCanPlay
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
     // We can initialize the unicorn studio script here or in layout. keeping it simple.
@@ -24,6 +29,7 @@ export default function Hero() {
 
                 <div className="aura-background-component top-0 w-full -z-10 absolute h-full">
                     <video
+                        key={isMobile ? 'mobile' : 'desktop'}
                         autoPlay
                         muted
                         loop
@@ -32,7 +38,7 @@ export default function Hero() {
                         className="absolute w-full h-full left-0 top-0 -z-10 object-cover"
                         style={{ animation: 'video-fade-loop 10s linear infinite' }}
                     >
-                        <source src="/background.webm" type="video/webm" />
+                        <source src={isMobile ? "/background-mobile.webm" : "/background.webm"} type="video/webm" />
                     </video>
                 </div>
             </div>

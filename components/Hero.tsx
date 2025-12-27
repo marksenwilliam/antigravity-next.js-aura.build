@@ -1,22 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 
 export default function Hero() {
-    const [bgLoaded, setBgLoaded] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
     const heroRef = useRef<HTMLElement>(null);
-
-    // Detect mobile screen size
-    useEffect(() => {
-        const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
 
     // We can initialize the unicorn studio script here or in layout. keeping it simple.
     return (
@@ -29,16 +17,15 @@ export default function Hero() {
 
                 <div className="aura-background-component top-0 w-full -z-10 absolute h-full">
                     <video
-                        key={isMobile ? 'mobile' : 'desktop'}
                         autoPlay
                         muted
                         loop
                         playsInline
                         preload="auto"
-                        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 ${isMobile ? 'w-[200%] h-[200%] object-contain' : 'w-full h-full object-cover'}`}
+                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-full h-full object-cover"
                         style={{ animation: 'video-fade-loop 10s linear infinite' }}
                     >
-                        <source src={isMobile ? "/background-mobile.webm" : "/background.webm"} type="video/webm" />
+                        <source src="/background.webm" type="video/webm" />
                     </video>
                 </div>
             </div>
